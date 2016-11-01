@@ -8,9 +8,14 @@ import java.util.*;
  */
 public class JayLinkedList<T> implements List, JaysInterface {
     private Node <T>firstNode;
+    private int size = 0;
 
     public Node<T> getFirstNode() {
         return firstNode;
+    }
+
+    public JayLinkedList() {
+        System.out.println("링크드리스트 생성됨");
     }
 
     public void setFirstNode(Node<T> firstNode) {
@@ -19,12 +24,14 @@ public class JayLinkedList<T> implements List, JaysInterface {
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        if(size != 0){
+        return false;}
+        else return true;
     }
 
     @Override
@@ -44,21 +51,33 @@ public class JayLinkedList<T> implements List, JaysInterface {
 
     @Override
     public boolean add(Object o) {
+        System.out.println("add 실행됨, 개체:"+o+"입니다.");
         T data = (T) o;
         Node tempNode = new Node(data);
         tempNode.setNextNode(this.firstNode);
         this.firstNode = tempNode;
+        size++;
         return true;
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
-    }
-
-    public boolean remove() {
-        this.firstNode = this.firstNode.getNextNode();
-        return false;
+        Boolean returnValue = false;
+        T data = (T) o;
+        Node tempNodeBefore = null;
+        Node tempNodeNow = firstNode;
+        while (tempNodeNow.getNextNode()!=null){
+            //지우는 항목
+            if(tempNodeNow.getData().equals(data)){
+                //A(이전) - B(현재) - C(다음) tempNodeBefore에 연결되어 있는 A의 다음 링크를 C로 연결한다.
+                Node temp = tempNodeNow.getNextNode();
+                tempNodeBefore.setNextNode(temp);
+                returnValue = true;
+                break;}
+            tempNodeBefore = tempNodeNow;
+            tempNodeNow = tempNodeNow.getNextNode();
+        }
+        return returnValue;
     }
 
     @Override
@@ -78,7 +97,14 @@ public class JayLinkedList<T> implements List, JaysInterface {
 
     @Override
     public Object get(int index) {
-        return null;
+        System.out.println("Get 실행됨, 인덱스:"+index+"입니다.");
+        int tempIndex = 0;
+        Node tempNode = firstNode;
+        while(tempIndex != index){
+            tempNode = tempNode.nextNode;
+            tempIndex++;
+        }
+        return tempNode.Data;
     }
 
     @Override
@@ -88,7 +114,14 @@ public class JayLinkedList<T> implements List, JaysInterface {
 
     @Override
     public void add(int index, Object element) {
+        T data = (T) element;
+        Node tempNode = new Node(element);
 
+        if(this.getFirstNode()!=null){
+            tempNode.setNextNode(this.getFirstNode());
+        }
+        firstNode = tempNode;
+        size++;
     }
 
     @Override
@@ -141,12 +174,14 @@ public class JayLinkedList<T> implements List, JaysInterface {
         return new Object[0];
     }
 
+
     //노드구현
     private class Node<T>{
         private Node nextNode;
         private T Data;
 
         public Node() {
+            System.out.println("Node 만들어짐");
         }
 
         public Node(T data) {
